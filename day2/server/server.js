@@ -5,7 +5,7 @@ const listEndpoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
 
 const students = require("./students/students/students")
-
+const projects = require("./students/projects/projects")
 
 const {
   notFoundHandler,
@@ -23,7 +23,7 @@ server.use(express.json())
 server.use(cors())
 
 server.use("/students", students)
-
+server.use("/projects" , projects)
 
 
 server.use(badRequestHandler)

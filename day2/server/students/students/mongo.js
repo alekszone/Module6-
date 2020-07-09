@@ -1,20 +1,9 @@
 const { Schema } = require("mongoose")
 const mongoose = require("mongoose")
-
+const valid = require("validator")
 const mongo = new Schema(
   {
-    _id:{
-     type:Number,
-     requried:true,
-     validate: {
-      validator: async (value) => {
-        const id = await Students.findOne({ _id: value })
-        if (id) {
-          throw new Error("Id exist try new one")
-        }
-      }
-    }
-    },
+  
     name:{
       type:String,
       required:true
@@ -29,12 +18,16 @@ const mongo = new Schema(
       lowercase:true,
       validate: {
         validator: async (value) => {
+          if(!valid.isEmail(value)){
+            throw new Error ("Email is ivalid")
+          }else{
           const email = await Students.findOne({ email: value })
           if (email) {
             throw new Error("Email exist exist already in database")
           }
         }
       }
+    }
  },
     dateOfBirth: {type: Date,
     required:true},
@@ -52,12 +45,12 @@ phoneNumber:{
       }
     }
   }
-}
+},
 
 
 
-  }
-  
+  },
+
 )
 const Students = mongoose.model("Mongo", mongo)
 module.exports = Students
