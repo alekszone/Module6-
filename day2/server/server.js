@@ -14,13 +14,13 @@ const {
     badRequestHandler,
     genericErrorHandler,
 } = require("./errorHandlers")
-const { resolveSoa } = require("dns")
+
 const server = express()
 
 server.use(express.json())
 server.use('/students', studentRouter)
 server.use("/projects", projectRouter)
-// ERROR HANDLERS MIDDLEWARES
+
 
 server.use(badRequestHandler)
 server.use(notFoundHandler)
