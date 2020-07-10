@@ -1,9 +1,10 @@
+
 const { Schema } = require("mongoose")
 const mongoose = require("mongoose")
 const valid = require("validator")
-const mongo = new Schema(
-  {
-  
+const StudentSchema = new Schema(
+    {
+
     name:{
       type:String,
       required:true
@@ -21,7 +22,7 @@ const mongo = new Schema(
           if(!valid.isEmail(value)){
             throw new Error ("Email is ivalid")
           }else{
-          const email = await Students.findOne({ email: value })
+          const email = await studentModal.findOne({ email: value })
           if (email) {
             throw new Error("Email exist exist already in database")
           }
@@ -39,18 +40,26 @@ phoneNumber:{
   required:true,
   validate: {
     validator: async (value) => {
-      const phoneNumber = await Students.findOne({ phoneNumber: value })
+      const phoneNumber = await studentModal.findOne({ phoneNumber: value })
       if (phoneNumber) {
         throw new Error("The number exist exist exist already in database")
       }
     }
   }
 },
+ projects: [{ type: Schema.Types.ObjectId, ref: "projects" }],
 
 
-
-  },
+    }
 
 )
-const Students = mongoose.model("Mongo", mongo)
-module.exports = Students
+
+
+StudentSchema.static("findAll", async function (id) {
+    const stud = await studentModal.findOne({ _id: id }).populate("students")
+    return stud
+})
+
+const studentModal = mongoose.model("students", StudentSchema)
+
+module.exports = studentModal

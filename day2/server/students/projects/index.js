@@ -1,8 +1,6 @@
 const express = require("express")
 const q2m = require ("query-to-mongo")
-const portofolosStud = require("./portofolos")
-
-const {_id} = require("../students/students")
+const portofolosStud = require("./schema")
 const projectStudents = express.Router()
 
 projectStudents.get("/", async (req, res, next) => {
