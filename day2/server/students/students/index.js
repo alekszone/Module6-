@@ -8,15 +8,12 @@ const studentRouter = express.Router()
 studentRouter.get("/", async (req, res, next) => {
   try {
     const stud = q2m(req.query)
-//  const   project = await StudentSchema.find({}).populate("projects")
-    const student = await StudentSchema.find(stud.criteria, stud.options.fields,{}).populate("projects")
-   
+const student = await StudentSchema.find(stud.criteria, stud.options.fields,{}).populate("projects")
 .skip(stud.options.skip )
 .limit(stud.options.limit)
 .sort(stud.options.sort)
 res.send({
 Filtered:[ student],
-// Populate:[project],
 numberOfStudents: student.length
 })
   } catch (error) {
@@ -43,7 +40,7 @@ studentRouter.get("/:id", async (req, res, next) => {
 })
 studentRouter.get("/:id/projects", async (req, res, next) => {
   try {
-      const projects = await projectSchema.find({ studentId: req.params.id })
+      const projects = await projectSchema.find({ studentId: req.params.id }).populate("projects")
       res.send(projects)
   } catch (error) {
       next(error)

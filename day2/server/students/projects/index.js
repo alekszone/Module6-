@@ -6,12 +6,14 @@ const projectStudents = express.Router()
 projectStudents.get("/", async (req, res, next) => {
   try {
     const stud = q2m(req.query)
-    const student = await portofolosStud.find(req.query)
-
-res.send({
- student,
-numberOfStudents: student.length
-})
+    const student = await portofolosStud.find(stud.criteria, stud.options.fields)
+    .skip(stud.options.skip )
+    .limit(stud.options.limit)
+    .sort(stud.options.sort)
+     res.send({
+       student,
+      numberOfStudents: student.length
+        })
   } catch (error) {
     next(error)
   }

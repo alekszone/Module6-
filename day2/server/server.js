@@ -17,9 +17,18 @@ const {
 
 const server = express()
 
+
+
+
+server.use(cors())
+
 server.use(express.json())
 server.use('/students', studentRouter)
 server.use("/projects", projectRouter)
+
+
+
+
 
 
 server.use(badRequestHandler)
