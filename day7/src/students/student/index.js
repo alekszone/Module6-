@@ -37,6 +37,22 @@ res.send(student.row)
 }
 })
 
+server.post("/email", async(req,res,next )=>{
+try{
+const email = await db.query(
+    `SELECT * FROM students WHERE email =$1`, [req.body.email])
+    if(checkEmail.length> 0 ){
+        res.send("Email exist try new one ")
+    }else{
+        res.send("Email is ok")
+    }
+}catch(err){
+next(err)
+}
+})
+
+
+
 server.put("/:id", async (req,res,next)=>{
 try {
 const student = await db.query( 
