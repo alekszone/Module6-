@@ -1,16 +1,42 @@
 const express = require("express")
 const db = require("../../db")
+const { query } = require("express")
 
 const server = express.Router()
 
 server.get("/", async (req,res,next)=>{
 try {
+    const order = req.query.order || "asc"
+    const offset = req.query.offset || 0
+    const limit = req.query.limit || 10
+    delete req.query.order
+    delete req.query.offset
+    delete req.query.limit
 const student = await db.query('SELECT * FROM student')
-res.send(student.rows)
+const data =[]
+for(dataParam in req.query){
+data.push(req.query[dataParam])
+if(data.length === 1 )
+student += 'WHERE ${dataParam} = $${data.length}'
+else
+student +=  'AND ${dataParam} = $${data.length}'
+}
+
+student += "ORDER BY id " + order
+data.push(limit)
+student += 'LIMIT $${data.length}'
+data.push(offset)
+student +='OFFSET $${data.length}'
+console.log(student)
+const back = await db.query(student,data)
+res.send(back.rows)
 }catch(err){
    next(err)
 }
 })
+
+
+    
 
 server.get("/:id", async (req,res,next)=>{
 try{
@@ -20,6 +46,24 @@ res.send(student.rows)
     next(err)
 }
 })
+
+server.get("/:id/project", async (req,res,next)=>{
+    try{
+    const student = await db.query(`SELECT 	id,name,surname,email, "dateOfBirth" , "studentID",project_name,project_id
+FROM
+ public.student
+JOIN public.project
+ON id = "studentID" 
+
+WHERE id=$1`,[req.params.id])
+    res.send(student.rows)
+    }catch(err){
+        next(err)
+    }
+    })
+
+
+
 server.post("/" , async (req,res,next)=>{
 try{
     const student = await db.query(
