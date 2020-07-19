@@ -3,15 +3,20 @@ const mongoose = require("mongoose")
 
 const mongo = new Schema(
   {
-    _id:
-    {type:String},
-   name: {type:String},
-    surname: String,
-    email: String,
-    dateOfBirth: Number,
-    country: Array,  
+  
+    surname:{type:String,
+      required:true
+      },
+    email: {
+      type:String,
+      required:true,
+      lowercase:true
+      },
+    dateOfBirth: {type: Date,
+    required:true},
+    country: String,  
   }
-  // { _id: false }
+  
 )
 
 module.exports = mongoose.model("Mongo", mongo)

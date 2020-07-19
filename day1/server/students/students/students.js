@@ -31,15 +31,22 @@ studentRouter.get("/:id", async (req, res, next) => {
 })
 
 studentRouter.post("/", async (req, res, next) => {
-  try {
-    const student = new StudentSchema(req.body)
+ try {
+      const emailCheck = await StudentSchema.find({email:req.body.email.toLowerCase()})
+   console.log(emailCheck)
+   if(emailCheck.length>0){
+     res.send('Email Already in use')
+   }else {
+  const student = new StudentSchema(req.body)
     const { _id } = await student.save()
-
-    res.status(201).send(_id)
-  } catch (error) {
+res.status(201).send(_id)
+ } } catch (error) {
     next(error)
   }
 })
+
+
+
 
 studentRouter.put("/:id", async (req, res, next) => {
   try {
