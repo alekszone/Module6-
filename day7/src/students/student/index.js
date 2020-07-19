@@ -12,24 +12,45 @@ try {
     delete req.query.order
     delete req.query.offset
     delete req.query.limit
-const student = await db.query('SELECT * FROM student')
-const data =[]
-for(dataParam in req.query){
-data.push(req.query[dataParam])
-if(data.length === 1 )
-student += 'WHERE ${dataParam} = $${data.length}'
-else
-student +=  'AND ${dataParam} = $${data.length}'
+const query = await db.query('SELECT * FROM "student" ')
+// const data =[]
+// for(dataParam in req.query){
+// data.push(req.query[dataParam])
+// if(data.length === 1 )
+// student += `WHERE ${dataParam} = $${data.length}`
+// else
+// student +=  `AND ${dataParam} = $${data.length}`
+// }
+
+// student += "ORDER BY id " + order
+// data.push(limit)
+// student += `LIMIT $${data.length}`
+// data.push(offset)
+// student +=`OFFSET $${data.length}`
+// console.log(student)
+// const back = await db.query(student,data)
+// res.send(back.rows)
+
+const params = []
+for (queryParam in req.query) { //for each value in query string, I'll filter
+    params.push(req.query[queryParam])
+
+    if (params.length === 1) // for the first, I'll add the where clause
+        query += `WHERE ${queryParam} = $${params.length} `
+    else // the all the rest, it'll start with AND
+        query += ` AND ${queryParam} = $${params.length} `
 }
 
-student += "ORDER BY id " + order
-data.push(limit)
-student += 'LIMIT $${data.length}'
-data.push(offset)
-student +='OFFSET $${data.length}'
-console.log(student)
-const back = await db.query(student,data)
-res.send(back.rows)
+query += " ORDER BY id " + order  //adding the sorting 
+
+params.push(limit)
+query += ` LIMIT $${params.length} `
+params.push(offset)
+query += ` OFFSET $${params.length}`
+console.log(query)
+
+
+const response = await db.query(query, params)
 }catch(err){
    next(err)
 }
