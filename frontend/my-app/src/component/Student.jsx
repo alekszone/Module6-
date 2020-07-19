@@ -12,7 +12,9 @@ export default class Student extends Component {
         console.log(stud)
         this.setState({
             student: stud
+
         })
+        console.log(this.state.student)
     //    window.location.reload()
     }
 render() {
